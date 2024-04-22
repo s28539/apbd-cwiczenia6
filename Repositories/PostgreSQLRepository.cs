@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Npgsql;
 using Tutorial5.Models;
 using Tutorial5.Models.DTOs;
@@ -35,7 +36,7 @@ public class PostgreSQLRepository : Repository
         return animals;
     }
 
-    public static void AddAnimal(string connectionString, AddAnimal addAnimal)
+    public static void AddAnimal(string connectionString,AddAnimal addAnimal)
     {
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
@@ -47,6 +48,38 @@ public class PostgreSQLRepository : Repository
         command.Parameters.AddWithValue("@animalArea", addAnimal.Area);
         command.CommandText = 
             "INSERT INTO Animal (Name, Description, Category, Area) VALUES (@animalName, @animalDescription,@animalCategory ,@animalArea)";
+        command.ExecuteNonQuery();
+    }
+
+    public static void UpdateAnimal(string connectionString, int idAnimal, UpdateAnimal updateAnimal)
+    { 
+        using var conn = new NpgsqlConnection(connectionString);
+        conn.Open();
+        using NpgsqlCommand command = new NpgsqlCommand();
+        command.Connection = conn;
+        command.Parameters.AddWithValue("@animalId", idAnimal);
+        command.Parameters.AddWithValue("@animalName", updateAnimal.Name);
+        command.Parameters.AddWithValue("@animalDescription", updateAnimal.Description);
+        command.Parameters.AddWithValue("@animalCategory", updateAnimal.Category);
+        command.Parameters.AddWithValue("@animalArea", updateAnimal.Area);
+        // UPDATE table_name
+        // SET column1 = value1, column2 = value2, ...
+        // WHERE condition;
+        command.CommandText = 
+            "UPDATE animal SET " +
+            "Name = @animalName, Description= @animalDescription, Category= @animalCategory , Area = @animalArea  " +
+            "where IdAnimal = @animalId";
+        command.ExecuteNonQuery();
+    }
+
+    public static void DeleteAnimal(string connectionString, int idAnimal)
+    {
+        using var conn = new NpgsqlConnection(connectionString);
+        conn.Open();
+        using NpgsqlCommand command = new NpgsqlCommand();
+        command.Connection = conn;
+        command.Parameters.AddWithValue("@animalId", idAnimal);
+        command.CommandText = "DELETE from animal where IdAnimal = @animalId";
         command.ExecuteNonQuery();
         
     }
