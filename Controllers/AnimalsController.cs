@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Tutorial5.Models;
 using Tutorial5.Models.DTOs;
@@ -58,5 +59,19 @@ public class AnimalsController : ControllerBase
         PostgreSQLRepository.AddAnimal(_configuration.GetConnectionString("Default"),addAnimal);
         
         return Created("", null);
+    }
+
+    [HttpPut]
+    public IActionResult UpdateAnimal(int id,UpdateAnimal updateAnimal)
+    {
+        PostgreSQLRepository.UpdateAnimal(_configuration.GetConnectionString("Default"),id,updateAnimal);
+        return Ok(updateAnimal);
+    }
+
+    [HttpDelete]
+    public IActionResult DeleteAnimal(int id)
+    {
+        PostgreSQLRepository.DeleteAnimal(_configuration.GetConnectionString("Default"),id);
+        return Ok();
     }
 }
