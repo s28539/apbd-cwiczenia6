@@ -7,7 +7,7 @@ namespace Tutorial5.Repositories;
 
 public class PostgreSQLRepository : Repository
 {
-    public static  List<Animal> GetRepository(string connectionString)
+    public  List<Animal> GetRepository(string connectionString)
     {
         List<Animal> animals = new List<Animal>();
         using var conn = new NpgsqlConnection(connectionString);
@@ -36,7 +36,7 @@ public class PostgreSQLRepository : Repository
         return animals;
     }
 
-    public static void AddAnimal(string connectionString,AddAnimal addAnimal)
+    public void AddAnimal(string connectionString,AddAnimal addAnimal)
     {
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
@@ -51,7 +51,7 @@ public class PostgreSQLRepository : Repository
         command.ExecuteNonQuery();
     }
 
-    public static void UpdateAnimal(string connectionString, int idAnimal, UpdateAnimal updateAnimal)
+    public void UpdateAnimal(string connectionString, int idAnimal, UpdateAnimal updateAnimal)
     { 
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
@@ -72,7 +72,7 @@ public class PostgreSQLRepository : Repository
         command.ExecuteNonQuery();
     }
 
-    public static void DeleteAnimal(string connectionString, int idAnimal)
+    public void DeleteAnimal(string connectionString, int idAnimal)
     {
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
@@ -83,4 +83,5 @@ public class PostgreSQLRepository : Repository
         command.ExecuteNonQuery();
         
     }
+    
 }
