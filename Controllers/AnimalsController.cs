@@ -13,15 +13,17 @@ namespace Tutorial5.Controllers;
 public class AnimalsController : ControllerBase
 {
     private readonly IConfiguration _configuration;
+    private Repository _repository;
     public AnimalsController(IConfiguration configuration)
     {
         _configuration = configuration;
+        _repository = new PostgreSQLRepository();
     }
     
     [HttpGet]
     public IActionResult GetAnimals([FromQuery] string orderBy = null)
     {
-        var animals = PostgreSQLRepository
+        var animals = _repository
             .GetRepository(_configuration.GetConnectionString("Default"))
             .AsEnumerable();
         
@@ -56,7 +58,7 @@ public class AnimalsController : ControllerBase
     [HttpPost]
     public IActionResult AddAnimal(AddAnimal addAnimal)
     {
-        PostgreSQLRepository.AddAnimal(_configuration.GetConnectionString("Default"),addAnimal);
+        _repository.AddAnimal(_configuration.GetConnectionString("Default"),addAnimal);
         
         return Created("", null);
     }
@@ -64,14 +66,14 @@ public class AnimalsController : ControllerBase
     [HttpPut]
     public IActionResult UpdateAnimal(int id,UpdateAnimal updateAnimal)
     {
-        PostgreSQLRepository.UpdateAnimal(_configuration.GetConnectionString("Default"),id,updateAnimal);
+        _repository.UpdateAnimal(_configuration.GetConnectionString("Default"),id,updateAnimal);
         return Ok(updateAnimal);
     }
 
     [HttpDelete]
     public IActionResult DeleteAnimal(int id)
     {
-        PostgreSQLRepository.DeleteAnimal(_configuration.GetConnectionString("Default"),id);
+        _repository.DeleteAnimal(_configuration.GetConnectionString("Default"),id);
         return Ok();
     }
 }
